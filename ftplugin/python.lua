@@ -1,0 +1,8 @@
+-- setlocal tabstop=4
+-- setlocal shiftwidth=4
+-- setlocal expandtab
+-- setlocal smarttab
+-- setlocal shiftround
+-- setlocal colorcolumn=88
+--
+vim.treesitter.start()
