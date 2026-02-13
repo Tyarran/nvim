@@ -16,9 +16,6 @@ return {
 		lazy = false,
 		priority = 1000,
 		opts = {},
-		-- config = function()
-		-- 	vim.cmd("colorscheme kanagawa")
-		-- end,
 	},
 	{
 		"folke/tokyonight.nvim",
@@ -29,7 +26,7 @@ return {
 	{
 		"catppuccin/nvim",
 		config = function()
-			-- vim.cmd("colorscheme catppuccin-mocha")
+			vim.cmd("colorscheme catppuccin-mocha")
 		end,
 	},
 	{
@@ -49,9 +46,6 @@ return {
 	},
 	{
 		"rose-pine/neovim",
-		config = function()
-			vim.cmd("colorscheme rose-pine-moon")
-		end,
 	},
 	{
 		"elvessousa/sobrio",
