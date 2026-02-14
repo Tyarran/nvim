@@ -1,0 +1,9 @@
+{
+  "dict_line": {
+    "prefix": ["dictline", "dl", "dline"],
+    "body": [
+      "\"${1:key}\": ${2:value},$0"
+    ],
+    "description": "Python dictionary line"
+  }
+}
