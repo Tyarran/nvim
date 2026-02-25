@@ -105,4 +105,8 @@ return {
 			require("blame").setup({})
 		end,
 	},
+   -- Jujutsu conflict
+  {
+    "rafikdraoui/jj-diffconflicts"
+  }
 }
