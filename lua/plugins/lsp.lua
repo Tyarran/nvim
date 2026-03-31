@@ -49,13 +49,14 @@ return {
 		opts = {
 			-- LSP servers
 			lsp = {
-				-- enable = { "lua_ls", "ty" },
+				enable = { "lua_ls", "jsonls" },
 			},
 			-- Formatters (by filetype)
 			formatters = {
 				lua = { "stylua" },
 				python = { "ruff_format", "ruff_organize_imports" },
-				javascript = "prettier",
+				javascript = { "prettier" },
+				json = { "jq" },
 			},
 			-- Linters (by filetype)
 			linters = {

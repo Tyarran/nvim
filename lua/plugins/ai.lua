@@ -6,8 +6,13 @@ return {
 			-- add any options here
 			cli = {
 				mux = {
-					backend = "tmux",
+					backend = "terminal",
 					enabled = true,
+					create = "split",
+				},
+				split = {
+					vertical = true, -- vertical or horizontal split
+					size = 0.3, -- size of the split (0-1 for percentage)
 				},
 				nes = { enabled = true },
 				prompts = {
