@@ -1,17 +1,3 @@
-vim.api.nvim_create_autocmd("FileType", {
-	desc = "Enable Treesitter",
-	group = vim.api.nvim_create_augroup("enable_treesitter", {}),
-	-- Don't filter by `pattern`, install and enable Treesitter parsers for all languages.
-	callback = function()
-		-- Enable Treesitter syntax highlighting.
-		if pcall(vim.treesitter.start) then
-			-- Use Treesitter indentation and folds.
-			vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
-			-- vim.wo.foldmethod = "expr"
-			-- vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-		end
-	end,
-})
 return {
 	{
 		"mason-org/mason.nvim",
@@ -19,6 +5,7 @@ return {
 	},
 	{
 		"nvim-treesitter/nvim-treesitter",
+		dependencies = { "nvim-lua/plenary.nvim" },
 		lazy = false,
 		build = ":TSUpdate",
 	},
@@ -63,9 +50,7 @@ return {
 				python = "ruff",
 				javascript = "eslint",
 			},
-			-- Tree-sitter parsers (array format for specific parsers)
 			parsers = { auto = true },
-			-- Additional Mason packages
 			packages = { "codespell" },
 		},
 	},
@@ -80,4 +65,10 @@ return {
 			},
 		},
 	},
+
+
+
+
+
+
 }

@@ -6,9 +6,9 @@ return {
 			-- add any options here
 			cli = {
 				mux = {
-					backend = "terminal",
+					backend = "tmux",
 					enabled = true,
-					create = "split",
+					create = "terminal",
 				},
 				split = {
 					vertical = true, -- vertical or horizontal split

@@ -1,60 +1,40 @@
-return {
-	{
-		"deparr/tairiki.nvim",
-	},
-	{
-		"vague-theme/vague.nvim",
-		lazy = false,
-		priority = 1000,
-		config = function()
-			require("vague").setup({})
-		end,
-	},
-	{ "bluz71/vim-moonfly-colors", name = "moonfly", lazy = false, priority = 1000 },
-	{
-		"rebelot/kanagawa.nvim",
-		lazy = false,
-		priority = 1000,
-		opts = {},
-	},
-	{
-		"folke/tokyonight.nvim",
-		lazy = false,
-		priority = 1000,
-		opts = {},
-		config = function()
-			vim.cmd("colorscheme tokyonight")
-		end,
-	},
-	{
-		"catppuccin/nvim",
-		-- config = function()
-		-- 	vim.cmd("colorscheme catppuccin-mocha")
-		-- end,
-	},
-	{
-		"EdenEast/nightfox.nvim",
-		config = function()
-			require("nightfox").setup({})
-			-- vim.cmd("colorscheme carbonfox")
-		end,
-	},
-	{
-		"navarasu/onedark.nvim",
-	},
-	{
-		"AlexvZyl/nordic.nvim",
-	},
-	{
-		"nyoom-engineering/oxocarbon.nvim",
-	},
-	{
-		"rose-pine/neovim",
-	},
-	{
-		"elvessousa/sobrio",
-	},
-	{
-		"nyoom-engineering/nyoom.nvim",
-	},
+-- Liste déclarative des thèmes
+local themes = {
+	"deparr/tairiki.nvim",
+	"vague-theme/vague.nvim",
+	"bluz71/vim-moonfly-colors",
+	"rebelot/kanagawa.nvim",
+	"folke/tokyonight.nvim",
+	"catppuccin/nvim",
+	"EdenEast/nightfox.nvim",
+	"navarasu/onedark.nvim",
+	"AlexvZyl/nordic.nvim",
+	"nyoom-engineering/oxocarbon.nvim",
+	"rose-pine/neovim",
+	"elvessousa/sobrio",
+	"nyoom-engineering/nyoom.nvim",
+	"olimorris/onedarkpro.nvim",
+	"oxfist/night-owl.nvim",
+	"folke/styler.nvim",
+	"yorumicolors/yorumi.nvim",
+	"ribru17/bamboo.nvim",
+	"kartikp10/noctis.nvim",
+	"uhs-robert/oasis.nvim",
+	{ "HoNamDuong/hybrid.nvim", colorscheme = "hybrid", default = true },
 }
+
+-- Transformation en specs Lazy.nvim
+return vim.tbl_map(function(theme)
+	-- Cas spécial : thème avec config (colorscheme auto-activé)
+	if type(theme) == "table" and theme.default then
+		return {
+			theme[1],
+			config = function()
+				vim.cmd("colorscheme " .. theme.colorscheme)
+			end,
+		}
+	end
+
+	-- Cas standard : simple string
+	return { theme, { "rktjmp/lush.nvim" } }
+end, themes)

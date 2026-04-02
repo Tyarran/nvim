@@ -73,7 +73,7 @@ return {
 	{
 		"windwp/nvim-autopairs",
 		event = "InsertEnter",
-		config = true,
+
 		-- use opts = {} for passing setup options
 		-- this is equivalent to setup({}) function
 	},
@@ -91,11 +91,10 @@ return {
 
 	-- Comments
 	{
-		"terrortylor/nvim-comment",
-		config = function()
-			require("nvim_comment").setup()
-		end,
-		event = "BufRead",
+		"numToStr/Comment.nvim",
+	},
+	{
+		"JoosepAlviste/nvim-ts-context-commentstring",
 	},
 
 	-- Jinja
@@ -113,7 +112,7 @@ return {
 		},
 		ft = "python", -- Load when opening Python files
 		keys = {
-			{ ",v", "<cmd>VenvSelect<cr>" }, -- Open picker on keymap
+			-- { ",v", "<cmd>VenvSelect<cr>" }, -- Open picker on keymap
 		},
 		opts = { -- this can be an empty lua table - just showing below for clarity.
 			search = {}, -- if you add your own searches, they go here.

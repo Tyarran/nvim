@@ -5,4 +5,4 @@
 -- setlocal shiftround
 -- setlocal colorcolumn=88
 --
-vim.treesitter.start()
+-- vim.treesitter.start()
