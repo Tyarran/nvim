@@ -18,6 +18,13 @@ function keys.init()
 	-- buffers
 	vim.keymap.set("n", "<S-d>", ":BufferClose<CR>", { noremap = true, silent = true })
 
+	-- Window navigation (normal and visual modes)
+	vim.keymap.set({"n", "v"}, "<C-Up>", "<C-w>k", { desc = "Move to upper window", noremap = true, silent = true })
+	vim.keymap.set({"n", "v"}, "<C-Down>", "<C-w>j", { desc = "Move to lower window", noremap = true, silent = true })
+	vim.keymap.set({"n", "v"}, "<C-Left>", "<C-w>h", { desc = "Move to left window", noremap = true, silent = true })
+	vim.keymap.set({"n", "v"}, "<C-Right>", "<C-w>l", { desc = "Move to right window", noremap = true, silent = true })
+
+	-- Window resizing
 	vim.keymap.set("n", "<S-Up>", "<CMD>resize +2<CR>", { desc = "Increase window height", silent = true })
 	vim.keymap.set("n", "<S-Down>", "<CMD>resize -2<CR>", { desc = "Decrease window height", silent = true })
 	vim.keymap.set("n", "<S-Left>", "<CMD>vertical resize -2<CR>", { desc = "Decrease window width", silent = true })

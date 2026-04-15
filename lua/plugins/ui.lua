@@ -68,16 +68,13 @@ return {
 	{
 		"folke/noice.nvim",
 		event = "VeryLazy",
+		priority = 1000,
 		opts = {
 			-- add any options here
 		},
 		dependencies = {
 			-- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
 			"MunifTanjim/nui.nvim",
-			-- OPTIONAL:
-			--   `nvim-notify` is only needed, if you want to use the notification view.
-			--   If not available, we use `mini` as the fallback
-			"rcarriga/nvim-notify",
 		},
 
 		config = function()
@@ -98,6 +95,7 @@ return {
 					inc_rename = false, -- enables an input dialog for inc-rename.nvim
 					lsp_doc_border = false, -- add a border to hover docs and signature help
 				},
+				-- Disable notifications in Noice (using Snacks instead)
 				notify = {
 					enabled = false,
 				},
@@ -121,39 +119,6 @@ return {
 		end,
 	},
 
-	-- Rainbow Delimiters
-	{
-		"hiphish/rainbow-delimiters.nvim",
-		config = function()
-			-- This module contains a number of default definitions
-			local rainbow_delimiters = require("rainbow-delimiters")
-
-			---@type rainbow_delimiters.config
-			vim.g.rainbow_delimiters = {
-				strategy = {
-					[""] = rainbow_delimiters.strategy["global"],
-					vim = rainbow_delimiters.strategy["local"],
-				},
-				query = {
-					[""] = "rainbow-delimiters",
-					lua = "rainbow-blocks",
-				},
-				priority = {
-					[""] = 110,
-					lua = 210,
-				},
-				highlight = {
-					"RainbowDelimiterRed",
-					"RainbowDelimiterYellow",
-					"RainbowDelimiterBlue",
-					"RainbowDelimiterOrange",
-					"RainbowDelimiterGreen",
-					"RainbowDelimiterViolet",
-					"RainbowDelimiterCyan",
-				},
-			}
-		end,
-	},
 
 	-- Scope (Tab-scoped buffers)
 	{

@@ -1,4 +1,10 @@
 return {
+	{
+		"zbirenbaum/copilot.lua",
+		dependencies = {
+			"copilotlsp-nvim/copilot-lsp", -- (optional) for NES functionality
+		},
+	},
 	-- Sidekick (AI)
 	{
 		"folke/sidekick.nvim",
@@ -7,7 +13,7 @@ return {
 			cli = {
 				mux = {
 					backend = "tmux",
-					enabled = true,
+					enabled = false,
 					create = "terminal",
 				},
 				split = {

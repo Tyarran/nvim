@@ -13,6 +13,9 @@ return {
 		"nvim-treesitter/nvim-treesitter-context",
 	},
 	{
+		"nvim-treesitter/nvim-treesitter-textobjects",
+	},
+	{
 		"stevearc/conform.nvim",
 		opts = {},
 		config = function()
@@ -36,7 +39,7 @@ return {
 		opts = {
 			-- LSP servers
 			lsp = {
-				enable = { "lua_ls", "jsonls" },
+				enable = { "lua_ls", "jsonls", "copilot-language-server" },
 			},
 			-- Formatters (by filetype)
 			formatters = {
@@ -66,9 +69,37 @@ return {
 		},
 	},
 
+	-- Rainbow Delimiters
+	{
+		"hiphish/rainbow-delimiters.nvim",
+		config = function()
+			-- This module contains a number of default definitions
+			local rainbow_delimiters = require("rainbow-delimiters")
 
-
-
-
-
+			---@type rainbow_delimiters.config
+			vim.g.rainbow_delimiters = {
+				strategy = {
+					[""] = rainbow_delimiters.strategy["global"],
+					vim = rainbow_delimiters.strategy["local"],
+				},
+				query = {
+					[""] = "rainbow-delimiters",
+					lua = "rainbow-blocks",
+				},
+				priority = {
+					[""] = 110,
+					lua = 210,
+				},
+				highlight = {
+					"RainbowDelimiterRed",
+					"RainbowDelimiterYellow",
+					"RainbowDelimiterBlue",
+					"RainbowDelimiterOrange",
+					"RainbowDelimiterGreen",
+					"RainbowDelimiterViolet",
+					"RainbowDelimiterCyan",
+				},
+			}
+		end,
+	},
 }

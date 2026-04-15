@@ -11,17 +11,16 @@ return {
 			bigfile = { enabled = true },
 			notifier = {
 				enabled = true,
-				timeout = 3000,
 			},
 			input = { enabled = true },
 			quickfile = { enabled = true },
 			statuscolumn = { enabled = true },
 			words = { enabled = true },
-			styles = {
-				notification = {
-					wo = { wrap = true }, -- Wrap notifications
-				},
-			},
+			-- styles = {
+			-- 	notification = {
+			-- 		wo = { wrap = true }, -- Wrap notifications
+			-- 	},
+			-- },
 			toggle = {},
 			dashboard = {},
 			gitbrowse = {},
@@ -462,11 +461,18 @@ return {
 				desc = "Select Scratch Buffer",
 			},
 			{
-				"<leader>n",
+				"<leader>nn",
+				function()
+					Snacks.picker.notifications()
+				end,
+				desc = "Snacks Notification History",
+			},
+			{
+				"<leader>nl",
 				function()
 					Snacks.notifier.show_history()
 				end,
-				desc = "Notification History",
+				desc = "Last Notifications",
 			},
 			{
 				"<leader>bd",
@@ -594,13 +600,13 @@ return {
 				pattern = "VeryLazy",
 				callback = function()
 					-- Setup some globals for debugging (lazy-loaded)
-					_G.dd = function(...)
-						Snacks.debug.inspect(...)
-					end
-					_G.bt = function()
-						Snacks.debug.backtrace()
-					end
-					vim.print = _G.dd -- Override print to use snacks for `:=` command
+					-- _G.dd = function(...)
+					-- 	Snacks.debug.inspect(...)
+					-- end
+					-- _G.bt = function()
+					-- 	Snacks.debug.backtrace()
+					-- end
+					-- vim.print = _G.dd -- Override print to use snacks for `:=` command
 
 					-- Create some toggle mappings
 					Snacks.toggle.option("spell", { name = "Spelling" }):map("<leader>us")
