@@ -195,38 +195,95 @@ return {
 				sort = { fields = { "score:desc", "idx" } },
 			}
 
-			-- Finder jj diff (même mécanique que git_diff de Snacks)
-			local function jj_diff_source(title, args)
-				return {
-					title = title,
-					finder = function(_opts, ctx)
-						local Diff = require("snacks.picker.source.diff")
-						local cwd = vim.fn.systemlist("jj root 2>/dev/null")[1] or vim.fn.getcwd()
-						return Diff.diff(
-							ctx:opts({
-								cmd = "jj",
-								args = args,
-								env = { PAGER = "cat" },
-								cwd = cwd,
-							}),
-							ctx
-						)
+			-- Finder jj diff avec toggle master (comme jj_log)
+			opts.picker.sources.jj_diff = {
+				title = "JJ Diff",
+				finder = function(_opts, ctx)
+					local cwd = vim.fn.systemlist("jj root 2>/dev/null")[1] or vim.fn.getcwd()
+					
+					-- Args selon le mode : diff normal ou depuis master
+					local args = _opts.show_master 
+						and { "diff", "--from", "present(master)", "--to", "@", "--git" }
+						or { "diff", "--git" }
+					
+					-- Exécuter la commande pour voir s'il y a des résultats
+					local cmd = "jj " .. table.concat(args, " ")
+					local output = vim.fn.systemlist(cmd .. " 2>/dev/null")
+					
+					-- Si pas de sortie, créer un placeholder
+					if not output or #output == 0 or (output[1] and output[1] == "") then
+						local mode_text = _opts.show_master and "(master..@)" or "(working copy)"
+						return {
+							{
+								file = "",
+								text = "No changes " .. mode_text .. " (Press Ctrl+T to toggle)",
+								status = "info",
+							}
+						}
+					end
+					
+					-- Sinon, utiliser le finder Diff normal
+					local Diff = require("snacks.picker.source.diff")
+					return Diff.diff(
+						ctx:opts({
+							cmd = "jj",
+							args = args,
+							env = { PAGER = "cat" },
+							cwd = cwd,
+						}),
+						ctx
+					)
+				end,
+				format = function(item, _picker) 
+					if item.status == "info" then
+						return {
+							{ "  ", "SnacksPickerIcon" },
+							{ item.text, "Comment" },
+						}
+					else
+						-- Format standard pour les vrais diffs
+						return require("snacks.picker.format").git_status(item, _picker)
+					end
+				end,
+				preview = function(ctx)
+					-- Si c'est un placeholder info, afficher un message
+					if ctx.item.status == "info" then
+						return "No changes to preview.\n\nPress Ctrl+T to toggle between:\n- Working copy diff\n- Master diff (present(master)..@)"
+					end
+					
+					local cwd = vim.fn.systemlist("jj root 2>/dev/null")[1] or vim.fn.getcwd()
+					local args = ctx.picker.opts.show_master
+						and { "diff", "--from", "present(master)", "--to", "@", "--git", ctx.item.file }
+						or { "diff", "--git", ctx.item.file }
+					
+					Snacks.picker.preview.cmd(
+						{ "jj", unpack(args) },
+						ctx,
+						{ 
+							env = { PAGER = "cat" },
+							cwd = cwd 
+						}
+					)
+				end,
+				matcher = { sort_empty = true },
+				sort = { fields = { "score:desc", "file", "idx" } },
+				actions = {
+					jj_toggle_master = function(picker)
+						picker.opts.show_master = not picker.opts.show_master
+						picker.title = picker.opts.show_master
+							and "JJ Diff (master..@)"
+							or "JJ Diff"
+						picker:refresh()
 					end,
-					format = "git_status",
-					preview = "diff",
-					matcher = { sort_empty = true },
-					sort = { fields = { "score:desc", "file", "idx" } },
-				}
-			end
-
-			opts.picker.sources.jj_diff = jj_diff_source(
-				"JJ Diff",
-				{ "diff", "--git" }
-			)
-			opts.picker.sources.jj_diff_master = jj_diff_source(
-				"JJ Diff (master..@)",
-				{ "diff", "--from", "present(master)", "--to", "@", "--git" }
-			)
+				},
+				win = {
+					input = {
+						keys = {
+							["<c-t>"] = { "jj_toggle_master", mode = { "n", "i" }, desc = "Toggle master diff" },
+						},
+					},
+				},
+			}
 
 			opts.picker.sources.jj_bookmarks = {
 				title = "JJ Bookmarks (local)",
@@ -338,15 +395,8 @@ return {
 				function()
 					Snacks.picker.pick("jj_diff")
 				end,
-				desc = "JJ Diff",
+				desc = "JJ Diff (Ctrl+T to toggle master)",
 			},
-			-- {
-			-- 	"<leader>jdm",
-			-- 	function()
-			-- 		Snacks.picker.pick("jj_diff_master")
-			-- 	end,
-			-- 	desc = "JJ Diff (master..@)",
-			-- },
 			{
 				"<leader>jb",
 				function()

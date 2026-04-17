@@ -461,18 +461,18 @@ return {
 				desc = "Select Scratch Buffer",
 			},
 			{
-				"<leader>nn",
+				"<leader>n",
 				function()
 					Snacks.picker.notifications()
 				end,
-				desc = "Snacks Notification History",
+				desc = "Notification History",
 			},
 			{
-				"<leader>nl",
+				"<leader>un",
 				function()
-					Snacks.notifier.show_history()
+					Snacks.notifier.hide()
 				end,
-				desc = "Last Notifications",
+				desc = "Dismiss All Notifications",
 			},
 			{
 				"<leader>bd",
