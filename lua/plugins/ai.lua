@@ -11,23 +11,36 @@ return {
 		opts = {
 			-- add any options here
 			cli = {
+        win = {
+          -- layout = "float",
+          float = {
+            border = "rounded",
+          },
+        },
 				mux = {
-					backend = "tmux",
-					enabled = false,
-					create = "terminal",
+					backend = "zellij",
+					enabled = true,
+					-- create = "split",
+				      -- create = "terminal"
 				},
 				split = {
 					vertical = true, -- vertical or horizontal split
 					size = 0.3, -- size of the split (0-1 for percentage)
 				},
 				nes = { enabled = true },
+				tools = {
+					pi = {
+						cmd = { "sh", "-c", "printf '\\033[?1000h\\033[?1006h'; exec pi" },
+					},
+				},
 				prompts = {
 					refactor = "Please refactor {this} to be more maintainable",
 					security = "Review {file} for security vulnerabilities",
 					custom = function(ctx)
 						return "Current file: " .. ctx.buf .. " at line " .. ctx.row
 					end,
-					review = "Fait moi la review complet de cette PR: ",
+					-- review = "Fait moi la review complet de cette PR: ",
+					review = "/review ",
 				},
 			},
 		},
@@ -50,6 +63,25 @@ return {
 					require("sidekick.cli").toggle()
 				end,
 				desc = "Sidekick Toggle CLI",
+			},
+			{
+				"<leader>af",
+				function()
+					-- Bascule la fenêtre CLI existante entre float et split à droite
+					require("sidekick.cli.state").with(function(state)
+						local term = state.terminal
+						if not term then
+							return
+						end
+						if term:is_open() then
+							term:hide()
+						end
+						term.opts.layout = term.opts.layout == "float" and "right" or "float"
+						term:show()
+						term:focus()
+					end, { attach = true })
+				end,
+				desc = "Sidekick Toggle CLI Layout (float/split)",
 			},
 			{
 				"<leader>as",
@@ -102,4 +134,29 @@ return {
 			},
 		},
 	},
+	-- {
+	-- 	"sudo-tee/opencode.nvim",
+	-- 	config = function()
+	-- 		require("opencode").setup({})
+	-- 	end,
+	-- 	dependencies = {
+	-- 		{
+	-- 			"MeanderingProgrammer/render-markdown.nvim",
+	-- 			opts = {
+	-- 				anti_conceal = { enabled = false },
+	-- 				file_types = { "markdown", "opencode_output" },
+	-- 			},
+	-- 			ft = { "markdown", "Avante", "copilot-chat", "opencode_output" },
+	-- 		},
+	-- 		-- Optional, for file mentions and commands completion, pick only one
+	-- 		"saghen/blink.cmp",
+	-- 		-- 'hrsh7th/nvim-cmp',
+	--
+	-- 		-- Optional, for file mentions picker, pick only one
+	-- 		"folke/snacks.nvim",
+	-- 		-- 'nvim-telescope/telescope.nvim',
+	-- 		-- 'ibhagwan/fzf-lua',
+	-- 		-- 'nvim_mini/mini.nvim',
+	-- 	},
+	-- },
 }
