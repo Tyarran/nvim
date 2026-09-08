@@ -11,9 +11,73 @@ return {
 	},
 	{
 		"nvim-treesitter/nvim-treesitter-context",
+		opts = {
+			max_lines = 1,
+		},
 	},
 	{
 		"nvim-treesitter/nvim-treesitter-textobjects",
+		dependencies = "nvim-treesitter/nvim-treesitter",
+		init = function()
+			vim.g.no_plugin_maps = true
+		end,
+		config = function()
+			require("nvim-treesitter-textobjects").setup({
+				select = {
+					lookahead = true,
+					include_surrounding_whitespace = false,
+				},
+				move = {
+					set_jumps = true,
+				},
+			})
+
+			-- Select keymaps
+			vim.keymap.set({ "x", "o" }, "af", function()
+				require("nvim-treesitter-textobjects.select").select_textobject("@function.outer", "textobjects")
+			end, { desc = "Select around function" })
+
+			vim.keymap.set({ "x", "o" }, "if", function()
+				require("nvim-treesitter-textobjects.select").select_textobject("@function.inner", "textobjects")
+			end, { desc = "Select inside function" })
+
+			vim.keymap.set({ "x", "o" }, "ac", function()
+				require("nvim-treesitter-textobjects.select").select_textobject("@class.outer", "textobjects")
+			end, { desc = "Select around class" })
+
+			vim.keymap.set({ "x", "o" }, "ic", function()
+				require("nvim-treesitter-textobjects.select").select_textobject("@class.inner", "textobjects")
+			end, { desc = "Select inside class" })
+
+			-- Move keymaps
+			vim.keymap.set({ "n", "x", "o" }, "]f", function()
+				require("nvim-treesitter-textobjects.move").goto_next_start("@function.outer", "textobjects")
+			end, { desc = "Goto next function start" })
+
+			vim.keymap.set({ "n", "x", "o" }, "[f", function()
+				require("nvim-treesitter-textobjects.move").goto_previous_start("@function.outer", "textobjects")
+			end, { desc = "Goto previous function start" })
+
+			vim.keymap.set({ "n", "x", "o" }, "]c", function()
+				require("nvim-treesitter-textobjects.move").goto_next_start("@class.outer", "textobjects")
+			end, { desc = "Goto next class start" })
+
+			vim.keymap.set({ "n", "x", "o" }, "[c", function()
+				require("nvim-treesitter-textobjects.move").goto_previous_start("@class.outer", "textobjects")
+			end, { desc = "Goto previous class start" })
+		end,
+	},
+  {
+    "shushtain/incselect.nvim",
+  },
+	{
+		"MeanderingProgrammer/treesitter-modules.nvim",
+		config = function()
+			require("treesitter-modules").setup({
+				jump = { enabled = true },
+				highlight = { enabled = true },
+			})
+		end,
 	},
 	{
 		"stevearc/conform.nvim",
@@ -101,5 +165,12 @@ return {
 				},
 			}
 		end,
+	},
+
+	-- Treesitter Playground for debugging
+	{
+		"nvim-treesitter/playground",
+		cmd = { "TSPlaygroundToggle" },
+		dependencies = "nvim-treesitter/nvim-treesitter",
 	},
 }
