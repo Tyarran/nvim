@@ -6,8 +6,8 @@ return {
 		lazy = false,
 		---@type snacks.Config
 		opts = {
-      image = {},
-      scroll = {},
+			image = {},
+			-- scroll = {},
 			bigfile = { enabled = true },
 			notifier = {
 				enabled = true,
@@ -622,6 +622,26 @@ return {
 						.option("background", { off = "light", on = "dark", name = "Dark Background" })
 						:map("<leader>ub")
 					Snacks.toggle.inlay_hints():map("<leader>uh")
+					Snacks.toggle({
+						name = "Images",
+						get = function()
+							local buf = vim.api.nvim_get_current_buf()
+							return vim.b[buf].snacks_image_attached == true
+						end,
+						set = function(state)
+							local buf = vim.api.nvim_get_current_buf()
+							if state then
+								vim.b[buf].snacks_image_attached = nil
+								Snacks.image.doc.attach(buf)
+							else
+								Snacks.image.doc.hover_close()
+								Snacks.image.placement.clean(buf)
+								pcall(vim.api.nvim_del_augroup_by_name, "snacks.image.inline." .. buf)
+								pcall(vim.api.nvim_del_augroup_by_name, "snacks.image.doc." .. buf)
+								vim.b[buf].snacks_image_attached = nil
+							end
+						end,
+					}):map("<leader>ui")
 				end,
 			})
 		end,
