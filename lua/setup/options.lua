@@ -10,6 +10,8 @@ function opts.init()
 	vim.opt.inccommand = "nosplit"
 	vim.opt.incsearch = true
 	vim.opt.mouse = "a"
+  vim.opt.mousescroll = "ver:6,hor:6"
+	-- vim.opt.selectmode = "mouse" -- une selection a la souris demarre en mode Select (retour propre en Insert), pas en Visual
 	vim.opt.number = true
 	vim.opt.smartindent = true
 	vim.opt.smartcase = true
@@ -21,6 +23,9 @@ function opts.init()
 	vim.opt.runtimepath:append("/home/romain/.local/share/nvim/site")
 	vim.opt.grepprg = "rg --vimgrep --smart-case --hidden"
 	vim.opt.wrap = true
+	vim.cmd.colorscheme("catppuccin")
+	-- vim.cmd.colorscheme("tokyonight")
+	-- vim.cmd.colorscheme("nordic")
 
 	vim.diagnostic.config({
 		virtual_text = true, -- ou false pour désactiver
@@ -29,6 +34,11 @@ function opts.init()
 		update_in_insert = false,
 		severity_sort = true,
 	})
+
+	-- Treesitter folding
+	vim.opt.foldmethod = "expr"
+	vim.opt.foldexpr = "v:lua.require('nvim-treesitter').foldexpr()"
+	vim.opt.foldlevel = 99 -- Don't fold by default
 end
 
 return opts

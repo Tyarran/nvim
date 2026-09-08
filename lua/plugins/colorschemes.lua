@@ -1,5 +1,5 @@
--- Liste déclarative des thèmes
-local themes = {
+-- Liste des thèmes à installer
+return {
 	"deparr/tairiki.nvim",
 	"vague-theme/vague.nvim",
 	"bluz71/vim-moonfly-colors",
@@ -9,7 +9,6 @@ local themes = {
 	"EdenEast/nightfox.nvim",
 	"navarasu/onedark.nvim",
 	"AlexvZyl/nordic.nvim",
-	"nyoom-engineering/oxocarbon.nvim",
 	"rose-pine/neovim",
 	"elvessousa/sobrio",
 	"nyoom-engineering/nyoom.nvim",
@@ -20,21 +19,17 @@ local themes = {
 	"ribru17/bamboo.nvim",
 	"kartikp10/noctis.nvim",
 	"uhs-robert/oasis.nvim",
-	{ "HoNamDuong/hybrid.nvim", colorscheme = "hybrid", default = true },
+	"marko-cerovac/material.nvim",
+	"HoNamDuong/hybrid.nvim",
+	"rktjmp/lush.nvim",
+  "garymjr/opencode.nvim",
+	{
+		"code-2026-theme/nvim",
+		name = "code-2026",
+		lazy = true,
+		config = function()
+			require("code-2026").setup({})
+		end,
+	},
 }
 
--- Transformation en specs Lazy.nvim
-return vim.tbl_map(function(theme)
-	-- Cas spécial : thème avec config (colorscheme auto-activé)
-	if type(theme) == "table" and theme.default then
-		return {
-			theme[1],
-			config = function()
-				vim.cmd("colorscheme " .. theme.colorscheme)
-			end,
-		}
-	end
-
-	-- Cas standard : simple string
-	return { theme, { "rktjmp/lush.nvim" } }
-end, themes)

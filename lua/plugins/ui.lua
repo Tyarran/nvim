@@ -15,7 +15,7 @@ return {
 					},
 					ignore_focus = {},
 					always_divide_middle = true,
-					globalstatus = false,
+					globalstatus = true,
 					refresh = {
 						statusline = 1000,
 						tabline = 1000,
@@ -61,6 +61,18 @@ return {
 				inactive_winbar = {},
 				extensions = {},
 			})
+
+			-- code-2026 expose son thème lualine sous le nom "code-2026", alors que
+			-- le colorscheme lui-même s'appelle "dark-2026" / "light-2026" :
+			-- l'option theme = "auto" de lualine ne peut donc pas le détecter seule.
+			vim.api.nvim_create_autocmd("ColorScheme", {
+				desc = "Basculer lualine sur le thème code-2026 quand dark-2026/light-2026 est actif",
+				group = vim.api.nvim_create_augroup("lualine_code_2026", {}),
+				pattern = { "dark-2026", "light-2026" },
+				callback = function()
+					require("lualine").setup({ options = { theme = "code-2026" } })
+				end,
+			})
 		end,
 	},
 
@@ -82,14 +94,14 @@ return {
 				lsp = {
 					-- override markdown rendering so that **cmp** and other plugins use **Treesitter**
 					override = {
-						["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-						["vim.lsp.util.stylize_markdown"] = true,
+						-- ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+						-- ["vim.lsp.util.stylize_markdown"] = true,
 						["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
 					},
 				},
 				-- you can enable a preset for easier configuration
 				presets = {
-					bottom_search = true, -- use a classic bottom cmdline for search
+					bottom_search = false, -- use a classic bottom cmdline for search
 					command_palette = true, -- position the cmdline and popupmenu together
 					long_message_to_split = true, -- long messages will be sent to a split
 					inc_rename = false, -- enables an input dialog for inc-rename.nvim
@@ -161,6 +173,31 @@ return {
 				-- or leave it empty to use the default settings
 				-- refer to the configuration section below
 			})
+		end,
+	},
+
+	-- Scrollbar (with diagnostics, cursor and gitsigns marks)
+	{
+		"petertriho/nvim-scrollbar",
+		event = "VeryLazy",
+		dependencies = { "lewis6991/gitsigns.nvim" },
+		config = function()
+			local colors = require("tokyonight.colors").setup()
+
+			require("scrollbar").setup({
+				handle = { color = colors.bg_highlight },
+				marks = {
+					Search = { color = colors.orange },
+					Error = { color = colors.error },
+					Warn = { color = colors.warning },
+					Info = { color = colors.info },
+					Hint = { color = colors.hint },
+					Misc = { color = colors.purple },
+				},
+				handlers = { gitsigns = true },
+			})
+
+			require("scrollbar.handlers.gitsigns").setup()
 		end,
 	},
 
