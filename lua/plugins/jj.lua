@@ -205,6 +205,12 @@ return {
 					local args = _opts.show_master 
 						and { "diff", "--from", "present(master)", "--to", "@", "--git" }
 						or { "diff", "--git" }
+
+					-- Filtrer sur le buffer courant si demandé
+					if _opts.buffer_only and _opts.buffer_file and _opts.buffer_file ~= "" then
+						table.insert(args, "--")
+						table.insert(args, _opts.buffer_file)
+					end
 					
 					-- Exécuter la commande pour voir s'il y a des résultats
 					local cmd = "jj " .. table.concat(args, " ")
@@ -213,6 +219,9 @@ return {
 					-- Si pas de sortie, créer un placeholder
 					if not output or #output == 0 or (output[1] and output[1] == "") then
 						local mode_text = _opts.show_master and "(master..@)" or "(working copy)"
+						if _opts.buffer_only then
+							mode_text = mode_text .. " [buffer]"
+						end
 						return {
 							{
 								file = "",
@@ -251,19 +260,8 @@ return {
 						return "No changes to preview.\n\nPress Ctrl+T to toggle between:\n- Working copy diff\n- Master diff (present(master)..@)"
 					end
 					
-					local cwd = vim.fn.systemlist("jj root 2>/dev/null")[1] or vim.fn.getcwd()
-					local args = ctx.picker.opts.show_master
-						and { "diff", "--from", "present(master)", "--to", "@", "--git", ctx.item.file }
-						or { "diff", "--git", ctx.item.file }
-					
-					Snacks.picker.preview.cmd(
-						{ "jj", unpack(args) },
-						ctx,
-						{ 
-							env = { PAGER = "cat" },
-							cwd = cwd 
-						}
-					)
+					-- Utiliser le système de preview diff natif de Snacks
+					return require("snacks.picker.preview").diff(ctx)
 				end,
 				matcher = { sort_empty = true },
 				sort = { fields = { "score:desc", "file", "idx" } },
@@ -275,11 +273,20 @@ return {
 							or "JJ Diff"
 						picker:refresh()
 					end,
+					jj_toggle_buffer = function(picker)
+						picker.opts.buffer_only = not picker.opts.buffer_only
+						local suffix = picker.opts.show_master and " (master..@)" or ""
+						picker.title = picker.opts.buffer_only
+							and "JJ Diff [buffer]" .. suffix
+							or "JJ Diff" .. suffix
+						picker:refresh()
+					end,
 				},
 				win = {
 					input = {
 						keys = {
 							["<c-t>"] = { "jj_toggle_master", mode = { "n", "i" }, desc = "Toggle master diff" },
+							["<c-b>"] = { "jj_toggle_buffer", mode = { "n", "i" }, desc = "Toggle buffer only" },
 						},
 					},
 				},
@@ -393,9 +400,22 @@ return {
 			{
 				"<leader>jd",
 				function()
-					Snacks.picker.pick("jj_diff")
+					-- Capturer le fichier relatif au repo jj avant d'ouvrir le picker
+					local jj_root = vim.fn.systemlist("jj root 2>/dev/null")[1]
+					local buf_file = ""
+					if jj_root then
+						local abs = vim.api.nvim_buf_get_name(0)
+						if abs ~= "" then
+							buf_file = vim.fn.fnamemodify(abs, ":." .. jj_root)
+							-- Fallback : chemin relatif simple si fnamemodify ne marche pas
+							if buf_file:sub(1, 1) == "/" then
+								buf_file = abs:sub(#jj_root + 2)
+							end
+						end
+					end
+					Snacks.picker.pick("jj_diff", { buffer_file = buf_file })
 				end,
-				desc = "JJ Diff (Ctrl+T to toggle master)",
+				desc = "JJ Diff (Ctrl+T master, Ctrl+B buffer)",
 			},
 			{
 				"<leader>jb",
