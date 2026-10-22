@@ -12,7 +12,6 @@
       pkgs = nixpkgs.legacyPackages.${system};
     in
     {
-      # Alternative: development shell (recommended)
       devShells.${system}.default = pkgs.mkShell {
         buildInputs = with pkgs; [
           neovim
@@ -27,16 +26,17 @@
           mermaid-cli
           fd
           lua5_1
+					git
+					gh
+					jj
+					ripgrep
 
           # Programming languages for neovim
-          go
-          ruby
-          php
-          julia
-          zulu
           python3
           python3Packages.pip
-          php84Packages.composer
+
+          # nix
+          nixfmt
         ];
       };
     };
