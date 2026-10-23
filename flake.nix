@@ -30,6 +30,7 @@
 					gh
 					jujutsu
 					ripgrep
+					lazyjj
 
           # Programming languages for neovim
           python3
