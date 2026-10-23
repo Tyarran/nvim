@@ -28,7 +28,7 @@
           lua5_1
 					git
 					gh
-					jj
+					jujutsu
 					ripgrep
 
           # Programming languages for neovim
