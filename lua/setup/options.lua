@@ -23,9 +23,7 @@ function opts.init()
 	vim.opt.runtimepath:append("/home/romain/.local/share/nvim/site")
 	vim.opt.grepprg = "rg --vimgrep --smart-case --hidden"
 	vim.opt.wrap = true
-	vim.cmd.colorscheme("catppuccin")
-	-- vim.cmd.colorscheme("tokyonight")
-	-- vim.cmd.colorscheme("nordic")
+	vim.cmd.colorscheme("tairiki")
 
 	vim.diagnostic.config({
 		virtual_text = true, -- ou false pour désactiver

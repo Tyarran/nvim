@@ -23,13 +23,9 @@ return {
 	"HoNamDuong/hybrid.nvim",
 	"rktjmp/lush.nvim",
   "garymjr/opencode.nvim",
-	{
-		"code-2026-theme/nvim",
-		name = "code-2026",
-		lazy = true,
-		config = function()
-			require("code-2026").setup({})
-		end,
-	},
+  "scottmckendry/cyberdream.nvim",
+  "jacoborus/tender.vim",
+  "fenetikm/falcon",
+  "dgox16/oldworld.nvim",
 }
 
